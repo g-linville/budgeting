@@ -29,7 +29,11 @@ func (h *Handler) CreateExpense(w http.ResponseWriter, r *http.Request) {
 	amountCents, date, validationErrors := validation.ValidateExpense(name, amountStr, dateStr)
 	if validationErrors.HasErrors() {
 		log.Printf("Validation errors: %v", validationErrors)
-		http.Error(w, validationErrors.Error(), http.StatusBadRequest)
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("HX-Retarget", "#expense-form-errors")
+		w.Header().Set("HX-Reswap", "innerHTML")
+		w.WriteHeader(http.StatusBadRequest)
+		h.templates.ExecuteTemplate(w, "validation-errors", validationErrors)
 		return
 	}
 
@@ -58,11 +62,7 @@ func (h *Handler) CreateExpense(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Return updated recent transactions and overview stats (OOB)
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.WriteHeader(http.StatusCreated)
-
-	// Get updated data
+	// Get updated data before writing response
 	now := time.Now()
 	transactions, err := h.getRecentTransactionsData(20)
 	if err != nil {
@@ -84,6 +84,10 @@ func (h *Handler) CreateExpense(w http.ResponseWriter, r *http.Request) {
 		CurrentMonth:       int(now.Month()),
 		CurrentYear:        now.Year(),
 	}
+
+	// Return updated recent transactions and overview stats (OOB)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusCreated)
 
 	// Render recent transactions
 	if err := h.templates.ExecuteTemplate(w, "recent-transactions", data); err != nil {
@@ -192,11 +196,20 @@ func (h *Handler) UpdateExpense(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return updated transactions and overview
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
 	now := time.Now()
-	transactions, _ := h.getRecentTransactionsData(20)
-	overview, _ := h.calculateOverviewStats(int(now.Month()), now.Year())
+	transactions, err := h.getRecentTransactionsData(20)
+	if err != nil {
+		log.Printf("Error getting transactions: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	overview, err := h.calculateOverviewStats(int(now.Month()), now.Year())
+	if err != nil {
+		log.Printf("Error calculating overview: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
 
 	data := DashboardData{
 		RecentTransactions: transactions,
@@ -204,6 +217,8 @@ func (h *Handler) UpdateExpense(w http.ResponseWriter, r *http.Request) {
 		CurrentMonth:       int(now.Month()),
 		CurrentYear:        now.Year(),
 	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	// Render recent transactions
 	if err := h.templates.ExecuteTemplate(w, "recent-transactions", data); err != nil {
@@ -236,11 +251,20 @@ func (h *Handler) DeleteExpense(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return updated transactions and overview
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
 	now := time.Now()
-	transactions, _ := h.getRecentTransactionsData(20)
-	overview, _ := h.calculateOverviewStats(int(now.Month()), now.Year())
+	transactions, err := h.getRecentTransactionsData(20)
+	if err != nil {
+		log.Printf("Error getting transactions: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	overview, err := h.calculateOverviewStats(int(now.Month()), now.Year())
+	if err != nil {
+		log.Printf("Error calculating overview: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
 
 	data := DashboardData{
 		RecentTransactions: transactions,
@@ -248,6 +272,8 @@ func (h *Handler) DeleteExpense(w http.ResponseWriter, r *http.Request) {
 		CurrentMonth:       int(now.Month()),
 		CurrentYear:        now.Year(),
 	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	// Render recent transactions
 	if err := h.templates.ExecuteTemplate(w, "recent-transactions", data); err != nil {

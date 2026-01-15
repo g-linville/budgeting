@@ -17,6 +17,7 @@ type DashboardData struct {
 	Overview           OverviewStats
 	CurrentMonth       int
 	CurrentYear        int
+	CurrentDay         int
 }
 
 // Transaction represents a combined view of expenses and income
@@ -77,6 +78,7 @@ func (h *Handler) Dashboard(w http.ResponseWriter, r *http.Request) {
 		Overview:           overview,
 		CurrentMonth:       currentMonth,
 		CurrentYear:        currentYear,
+		CurrentDay:         now.Day(),
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -158,8 +160,8 @@ func (h *Handler) getRecentTransactionsData(limit int) ([]Transaction, error) {
 
 // calculateOverviewStats calculates total income, expenses, and net savings for a given month
 func (h *Handler) calculateOverviewStats(month, year int) (OverviewStats, error) {
-	// Calculate date range for the month
-	startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+	// Calculate date range for the month (using local timezone for local-first app)
+	startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.Local)
 	endDate := startDate.AddDate(0, 1, 0).Add(-time.Second)
 
 	// Query expenses for the month

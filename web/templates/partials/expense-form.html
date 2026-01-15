@@ -2,8 +2,10 @@
 <form hx-post="/expenses"
       hx-target="#recent-transactions"
       hx-swap="outerHTML"
-      hx-on::after-request="if(event.detail.successful) this.reset()"
+      hx-on::after-request="if(event.detail.successful) { this.reset(); document.getElementById('expense-form-errors').innerHTML = ''; }"
       class="expense-form">
+
+    <div id="expense-form-errors"></div>
 
     <div class="form-group">
         <label for="expense-name">Name *</label>
@@ -18,10 +20,12 @@
 
     <div class="form-group">
         <label for="expense-amount">Amount *</label>
-        <input type="text"
+        <input type="number"
                id="expense-amount"
                name="amount"
                required
+               step="0.01"
+               min="0.01"
                placeholder="e.g., 12.34">
         <span class="field-error" id="expense-amount-error"></span>
     </div>
@@ -41,7 +45,7 @@
         <input type="date"
                id="expense-date"
                name="expense_date"
-               value="{{ .CurrentYear }}-{{ printf "%02d" .CurrentMonth }}-{{ printf "%02d" 1 }}">
+               value="{{ .CurrentYear }}-{{ printf "%02d" .CurrentMonth }}-{{ printf "%02d" .CurrentDay }}">
     </div>
 
     <div class="form-group">

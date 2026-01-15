@@ -1,6 +1,6 @@
 {{ define "transaction-edit-income" }}
 <div id="transaction-income-{{ .Income.ID }}" class="transaction-row transaction-edit-form">
-    <form hx-put="/income/{{ .Income.ID }}"
+    <form hx-put="/incomes/{{ .Income.ID }}"
           hx-target="#transaction-income-{{ .Income.ID }}"
           hx-swap="outerHTML"
           class="edit-form">
@@ -14,10 +14,12 @@
         </div>
 
         <div class="form-group">
-            <input type="text"
+            <input type="number"
                    name="amount"
                    value="{{ printf "%.2f" (divf .Income.Amount 100) }}"
                    required
+                   step="0.01"
+                   min="0.01"
                    placeholder="Amount">
         </div>
 

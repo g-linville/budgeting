@@ -80,7 +80,7 @@ func ValidateExpense(name, amountStr, dateStr string) (int, time.Time, Validatio
 		// Default to today if not provided
 		date = time.Now()
 	} else {
-		parsedDate, err := time.Parse("2006-01-02", dateStr)
+		parsedDate, err := time.ParseInLocation("2006-01-02", dateStr, time.Local)
 		if err != nil {
 			errors = append(errors, ValidationError{
 				Field:   "expense_date",

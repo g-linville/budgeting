@@ -12,8 +12,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-var templates *template.Template
-
 func main() {
 	// Initialize database
 	db, err := database.InitDB("./budgeting.db")
@@ -27,9 +25,15 @@ func main() {
 		"divf": func(a int, b float64) float64 {
 			return float64(a) / b
 		},
+		"derefUint": func(p *uint) uint {
+			if p == nil {
+				return 0
+			}
+			return *p
+		},
 	}
 
-	templates, err = template.New("").Funcs(funcMap).ParseGlob("web/templates/*.html")
+	templates, err := template.New("").Funcs(funcMap).ParseGlob("web/templates/*.html")
 	if err != nil {
 		log.Fatalf("Failed to parse templates: %v", err)
 	}
@@ -64,14 +68,15 @@ func main() {
 	r.Delete("/expenses/{id}", h.DeleteExpense)
 
 	// Income routes
-	r.Post("/income", h.CreateIncome)
-	r.Get("/income/{id}/edit", h.GetIncomeEditForm)
-	r.Put("/income/{id}", h.UpdateIncome)
-	r.Delete("/income/{id}", h.DeleteIncome)
+	r.Post("/incomes", h.CreateIncome)
+	r.Get("/incomes/{id}/edit", h.GetIncomeEditForm)
+	r.Put("/incomes/{id}", h.UpdateIncome)
+	r.Delete("/incomes/{id}", h.DeleteIncome)
 
 	// Category routes
 	r.Get("/categories", h.ListCategories)
 	r.Post("/categories", h.CreateCategory)
+	r.Get("/categories/{id}/edit", h.GetCategoryEditForm)
 	r.Put("/categories/{id}", h.UpdateCategory)
 	r.Delete("/categories/{id}", h.DeleteCategory)
 

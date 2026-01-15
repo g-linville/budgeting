@@ -86,6 +86,34 @@ func (h *Handler) CreateCategory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetCategoryEditForm handles GET /categories/{id}/edit
+func (h *Handler) GetCategoryEditForm(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	var category models.Category
+	if err := h.db.First(&category, id).Error; err != nil {
+		http.Error(w, "Category not found", http.StatusNotFound)
+		return
+	}
+
+	data := struct {
+		Category models.Category
+	}{
+		Category: category,
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := h.templates.ExecuteTemplate(w, "category-edit", data); err != nil {
+		log.Printf("Error executing template: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
 // UpdateCategory handles PUT /categories/{id}
 func (h *Handler) UpdateCategory(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")

@@ -119,6 +119,29 @@ textarea.error {
     margin-top: -8px;
 }
 
+/* Validation Error Toast */
+.validation-error-toast {
+    background: #fee2e2;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.validation-error-toast .error-list {
+    margin: 0;
+    padding-left: 20px;
+    color: #dc3545;
+}
+
+.validation-error-toast .error-list li {
+    margin-bottom: 5px;
+}
+
+.validation-error-toast .error-list li:last-child {
+    margin-bottom: 0;
+}
+
 textarea {
     resize: vertical;
     min-height: 60px;
@@ -281,6 +304,34 @@ textarea {
     color: #999;
 }
 
+/* Transaction Edit Form */
+.transaction-edit-form {
+    grid-template-columns: 1fr;
+}
+
+.transaction-edit-form .edit-form {
+    display: grid;
+    grid-template-columns: 1fr 100px 100px 120px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+.transaction-edit-form .edit-form .form-group {
+    margin: 0;
+}
+
+.transaction-edit-form .transaction-actions {
+    display: flex;
+    gap: 5px;
+}
+
+@media (max-width: 768px) {
+    .transaction-edit-form .edit-form {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Modal */
 .modal {
     position: fixed;
@@ -366,6 +417,35 @@ textarea {
 .category-actions {
     display: flex;
     gap: 8px;
+}
+
+/* Category Edit Form */
+.category-edit-mode {
+    background: #f0f9ff;
+}
+
+.category-edit-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.category-edit-inputs {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+}
+
+.category-edit-inputs input[type="text"] {
+    flex: 1;
+}
+
+.category-edit-inputs input[type="color"] {
+    width: 50px;
+    padding: 5px;
+    cursor: pointer;
 }
 
 /* Actions section */

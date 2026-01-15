@@ -10,6 +10,12 @@
                 <span class="category-name">{{ .Name }}</span>
             </div>
             <div class="category-actions">
+                <button hx-get="/categories/{{ .ID }}/edit"
+                        hx-target="#category-{{ .ID }}"
+                        hx-swap="outerHTML"
+                        class="btn btn-small btn-secondary">
+                    Edit
+                </button>
                 <button hx-delete="/categories/{{ .ID }}"
                         hx-confirm="Are you sure you want to delete this category? Existing expenses will be set to 'Uncategorized'."
                         hx-target="#category-list"

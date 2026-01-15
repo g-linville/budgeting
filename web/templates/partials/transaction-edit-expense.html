@@ -14,10 +14,12 @@
         </div>
 
         <div class="form-group">
-            <input type="text"
+            <input type="number"
                    name="amount"
                    value="{{ printf "%.2f" (divf .Expense.Amount 100) }}"
                    required
+                   step="0.01"
+                   min="0.01"
                    placeholder="Amount">
         </div>
 
@@ -25,7 +27,7 @@
             <select name="category_id">
                 <option value="">Uncategorized</option>
                 {{ range .Categories }}
-                <option value="{{ .ID }}" {{ if and $.Expense.CategoryID (eq $.Expense.CategoryID .ID) }}selected{{ end }}>
+                <option value="{{ .ID }}" {{ if eq (derefUint $.Expense.CategoryID) .ID }}selected{{ end }}>
                     {{ .Name }}
                 </option>
                 {{ end }}

@@ -38,10 +38,30 @@ func DollarsToCents(dollars string) (int, error) {
 }
 
 // CentsToUSD converts cents (integer) to formatted USD string
-// Examples: 1234 -> "$12.34", 500000 -> "$5,000.00", 99 -> "$0.99"
+// Examples: 1234 -> "$12.34", 500000 -> "$5,000.00", 99 -> "$0.99", -1234 -> "-$12.34"
 func CentsToUSD(cents int) string {
-	dollars := float64(cents) / 100.0
+	negative := cents < 0
+	if negative {
+		cents = -cents
+	}
 
-	// Format with thousand separators and 2 decimal places
-	return fmt.Sprintf("$%,.2f", dollars)
+	dollars := cents / 100
+	remainder := cents % 100
+
+	// Format dollars with thousand separators
+	dollarStr := strconv.Itoa(dollars)
+	var result strings.Builder
+
+	for i, c := range dollarStr {
+		if i > 0 && (len(dollarStr)-i)%3 == 0 {
+			result.WriteByte(',')
+		}
+		result.WriteRune(c)
+	}
+
+	sign := ""
+	if negative {
+		sign = "-"
+	}
+	return fmt.Sprintf("%s$%s.%02d", sign, result.String(), remainder)
 }

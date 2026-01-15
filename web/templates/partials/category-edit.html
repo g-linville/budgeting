@@ -1,0 +1,28 @@
+{{ define "category-edit" }}
+<div id="category-{{ .Category.ID }}" class="category-item category-edit-mode">
+    <form hx-put="/categories/{{ .Category.ID }}"
+          hx-target="#category-list"
+          hx-swap="outerHTML"
+          class="category-edit-form">
+        <div class="category-edit-inputs">
+            <input type="text"
+                   name="name"
+                   value="{{ .Category.Name }}"
+                   required
+                   maxlength="255"
+                   placeholder="Category name">
+            <input type="color"
+                   name="color"
+                   value="{{ if .Category.Color }}{{ .Category.Color }}{{ else }}#667eea{{ end }}">
+        </div>
+        <div class="category-actions">
+            <button type="submit" class="btn btn-small btn-primary">Save</button>
+            <button type="button"
+                    hx-get="/categories"
+                    hx-target="#modal-container"
+                    hx-swap="innerHTML"
+                    class="btn btn-small btn-secondary">Cancel</button>
+        </div>
+    </form>
+</div>
+{{ end }}

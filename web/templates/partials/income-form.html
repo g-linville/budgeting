@@ -1,9 +1,11 @@
 {{ define "income-form" }}
-<form hx-post="/income"
+<form hx-post="/incomes"
       hx-target="#recent-transactions"
       hx-swap="outerHTML"
-      hx-on::after-request="if(event.detail.successful) this.reset()"
+      hx-on::after-request="if(event.detail.successful) { this.reset(); document.getElementById('income-form-errors').innerHTML = ''; }"
       class="income-form">
+
+    <div id="income-form-errors"></div>
 
     <div class="form-group">
         <label for="income-name">Name *</label>
@@ -18,10 +20,12 @@
 
     <div class="form-group">
         <label for="income-amount">Amount *</label>
-        <input type="text"
+        <input type="number"
                id="income-amount"
                name="amount"
                required
+               step="0.01"
+               min="0.01"
                placeholder="e.g., 5000.00">
         <span class="field-error" id="income-amount-error"></span>
     </div>
@@ -31,7 +35,7 @@
         <input type="date"
                id="income-date"
                name="income_date"
-               value="{{ .CurrentYear }}-{{ printf "%02d" .CurrentMonth }}-{{ printf "%02d" 1 }}">
+               value="{{ .CurrentYear }}-{{ printf "%02d" .CurrentMonth }}-{{ printf "%02d" .CurrentDay }}">
     </div>
 
     <div class="form-group">

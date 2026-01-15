@@ -1,0 +1,9 @@
+{{ define "validation-errors" }}
+<div class="validation-error-toast" role="alert">
+    <ul class="error-list">
+        {{ range . }}
+        <li><strong>{{ .Field }}:</strong> {{ .Message }}</li>
+        {{ end }}
+    </ul>
+</div>
+{{ end }}
