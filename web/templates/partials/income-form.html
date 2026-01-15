@@ -1,0 +1,47 @@
+{{ define "income-form" }}
+<form hx-post="/income"
+      hx-target="#recent-transactions"
+      hx-swap="outerHTML"
+      hx-on::after-request="if(event.detail.successful) this.reset()"
+      class="income-form">
+
+    <div class="form-group">
+        <label for="income-name">Name *</label>
+        <input type="text"
+               id="income-name"
+               name="name"
+               required
+               maxlength="255"
+               placeholder="e.g., Salary">
+        <span class="field-error" id="income-name-error"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="income-amount">Amount *</label>
+        <input type="text"
+               id="income-amount"
+               name="amount"
+               required
+               placeholder="e.g., 5000.00">
+        <span class="field-error" id="income-amount-error"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="income-date">Date</label>
+        <input type="date"
+               id="income-date"
+               name="income_date"
+               value="{{ .CurrentYear }}-{{ printf "%02d" .CurrentMonth }}-{{ printf "%02d" 1 }}">
+    </div>
+
+    <div class="form-group">
+        <label for="income-notes">Notes</label>
+        <textarea id="income-notes"
+                  name="notes"
+                  rows="2"
+                  placeholder="Optional notes"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Income</button>
+</form>
+{{ end }}

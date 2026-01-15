@@ -1,0 +1,39 @@
+{{ define "recent-transactions" }}
+<div id="recent-transactions" class="transactions-list">
+    {{ if .RecentTransactions }}
+        {{ range .RecentTransactions }}
+        <div id="transaction-{{ .Type }}-{{ .ID }}" class="transaction-row">
+            <div class="transaction-date">{{ .Date }}</div>
+            <div class="transaction-name">{{ .Name }}</div>
+            <div class="transaction-amount {{ .Type }}">{{ .Amount }}</div>
+            <div class="transaction-category">
+                {{ if .Category }}
+                    {{ .Category }}
+                {{ else }}
+                    {{ if eq .Type "expense" }}Uncategorized{{ else }}-{{ end }}
+                {{ end }}
+            </div>
+            <div class="transaction-actions">
+                <button hx-get="/{{ .Type }}s/{{ .ID }}/edit"
+                        hx-target="#transaction-{{ .Type }}-{{ .ID }}"
+                        hx-swap="outerHTML"
+                        class="btn btn-small btn-secondary">
+                    Edit
+                </button>
+                <button hx-delete="/{{ .Type }}s/{{ .ID }}"
+                        hx-confirm="Are you sure you want to delete this {{ .Type }}?"
+                        hx-target="#transaction-{{ .Type }}-{{ .ID }}"
+                        hx-swap="outerHTML swap:200ms"
+                        class="btn btn-small btn-danger">
+                    Delete
+                </button>
+            </div>
+        </div>
+        {{ end }}
+    {{ else }}
+        <div class="empty-state">
+            <p>No transactions yet. Add your first expense or income above!</p>
+        </div>
+    {{ end }}
+</div>
+{{ end }}

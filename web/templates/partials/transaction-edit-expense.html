@@ -1,0 +1,58 @@
+{{ define "transaction-edit-expense" }}
+<div id="transaction-expense-{{ .Expense.ID }}" class="transaction-row transaction-edit-form">
+    <form hx-put="/expenses/{{ .Expense.ID }}"
+          hx-target="#transaction-expense-{{ .Expense.ID }}"
+          hx-swap="outerHTML"
+          class="edit-form">
+
+        <div class="form-group">
+            <input type="text"
+                   name="name"
+                   value="{{ .Expense.Name }}"
+                   required
+                   placeholder="Name">
+        </div>
+
+        <div class="form-group">
+            <input type="text"
+                   name="amount"
+                   value="{{ printf "%.2f" (divf .Expense.Amount 100) }}"
+                   required
+                   placeholder="Amount">
+        </div>
+
+        <div class="form-group">
+            <select name="category_id">
+                <option value="">Uncategorized</option>
+                {{ range .Categories }}
+                <option value="{{ .ID }}" {{ if and $.Expense.CategoryID (eq $.Expense.CategoryID .ID) }}selected{{ end }}>
+                    {{ .Name }}
+                </option>
+                {{ end }}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="date"
+                   name="expense_date"
+                   value="{{ .Expense.ExpenseDate.Format "2006-01-02" }}"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <textarea name="notes" rows="1" placeholder="Notes">{{ .Expense.Notes }}</textarea>
+        </div>
+
+        <div class="transaction-actions">
+            <button type="submit" class="btn btn-small btn-primary">Save</button>
+            <button type="button"
+                    hx-get="/partials/recent-transactions"
+                    hx-target="#recent-transactions"
+                    hx-swap="outerHTML"
+                    class="btn btn-small btn-secondary">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
+{{ end }}

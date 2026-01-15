@@ -1,0 +1,21 @@
+{{ define "overview-stats-oob" }}
+<div id="overview-stats" hx-swap-oob="true" class="overview-stats">
+    <h2>Overview - {{ .CurrentYear }}/{{ printf "%02d" .CurrentMonth }}</h2>
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-label">Total Income</div>
+            <div class="stat-value">{{ .Overview.TotalIncome }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Total Expenses</div>
+            <div class="stat-value">{{ .Overview.TotalExpenses }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Net Savings</div>
+            <div class="stat-value {{ if .Overview.IsPositive }}positive{{ else }}negative{{ end }}">
+                {{ .Overview.NetSavings }}
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

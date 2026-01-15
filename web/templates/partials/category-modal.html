@@ -1,0 +1,51 @@
+{{ define "category-modal" }}
+<div class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Manage Categories</h2>
+            <button class="modal-close"
+                    onclick="document.getElementById('modal-container').innerHTML = ''">
+                &times;
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Create Category Form -->
+            <div class="form-card mb-2">
+                <h3>Add New Category</h3>
+                <form hx-post="/categories"
+                      hx-target="#category-list"
+                      hx-swap="outerHTML"
+                      hx-on::after-request="if(event.detail.successful) this.reset()">
+
+                    <div class="form-group">
+                        <label for="category-name">Name *</label>
+                        <input type="text"
+                               id="category-name"
+                               name="name"
+                               required
+                               maxlength="255"
+                               placeholder="e.g., Groceries">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category-color">Color</label>
+                        <input type="color"
+                               id="category-color"
+                               name="color"
+                               value="#667eea">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </form>
+            </div>
+
+            <!-- Categories List -->
+            <div class="mt-2">
+                <h3>Existing Categories</h3>
+                {{ template "category-list" . }}
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

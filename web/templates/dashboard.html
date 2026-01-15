@@ -1,0 +1,38 @@
+{{ define "content" }}
+<div class="dashboard">
+    <!-- Quick Add Forms -->
+    <div class="quick-add-section">
+        <div class="quick-add-forms">
+            <div class="form-card">
+                <h2>Quick Add Expense</h2>
+                {{ template "expense-form" . }}
+            </div>
+            <div class="form-card">
+                <h2>Quick Add Income</h2>
+                {{ template "income-form" . }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Overview Stats -->
+    <div class="overview-section">
+        {{ template "overview-stats" . }}
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="transactions-section">
+        <h2>Recent Transactions</h2>
+        {{ template "recent-transactions" . }}
+    </div>
+
+    <!-- Category Management -->
+    <div class="actions-section">
+        <button hx-get="/categories"
+                hx-target="#modal-container"
+                hx-swap="innerHTML"
+                class="btn btn-secondary">
+            Manage Categories
+        </button>
+    </div>
+</div>
+{{ end }}

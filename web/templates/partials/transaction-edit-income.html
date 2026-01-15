@@ -1,0 +1,47 @@
+{{ define "transaction-edit-income" }}
+<div id="transaction-income-{{ .Income.ID }}" class="transaction-row transaction-edit-form">
+    <form hx-put="/income/{{ .Income.ID }}"
+          hx-target="#transaction-income-{{ .Income.ID }}"
+          hx-swap="outerHTML"
+          class="edit-form">
+
+        <div class="form-group">
+            <input type="text"
+                   name="name"
+                   value="{{ .Income.Name }}"
+                   required
+                   placeholder="Name">
+        </div>
+
+        <div class="form-group">
+            <input type="text"
+                   name="amount"
+                   value="{{ printf "%.2f" (divf .Income.Amount 100) }}"
+                   required
+                   placeholder="Amount">
+        </div>
+
+        <div class="form-group">
+            <input type="date"
+                   name="income_date"
+                   value="{{ .Income.IncomeDate.Format "2006-01-02" }}"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <textarea name="notes" rows="1" placeholder="Notes">{{ .Income.Notes }}</textarea>
+        </div>
+
+        <div class="transaction-actions">
+            <button type="submit" class="btn btn-small btn-primary">Save</button>
+            <button type="button"
+                    hx-get="/partials/recent-transactions"
+                    hx-target="#recent-transactions"
+                    hx-swap="outerHTML"
+                    class="btn btn-small btn-secondary">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
+{{ end }}
